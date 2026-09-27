@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123e68">
+<title>WBSEDCL Roster Generator Pro v5</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#182532;font-family:Arial,Helvetica,sans-serif}
+:root{--navy:#123e68;--blue:#1d557f;--gold:#e7ad2b;--line:#d6e0e8}
+header{background:linear-gradient(135deg,#092d50,#1d557f 58%,#2d789d);color:#fff;border-bottom:4px solid var(--gold);padding:18px;box-shadow:0 8px 25px #123e6830}.vtag{font-size:9px;background:#ffffff25;padding:4px 7px;border-radius:999px;vertical-align:middle;margin-left:5px}
+.brand{font-size:18px;font-weight:900}.sub{font-size:11px;opacity:.9;margin-top:3px}
+.wrap{max-width:1150px;margin:auto;padding:13px}.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 5px 22px #123e6812;border:1px solid #ffffff}.card:hover{box-shadow:0 8px 28px #123e6818}
+h2{font-size:17px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+label{display:block;font-size:11px;font-weight:800;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5df;border-radius:8px;background:#fff;font-size:14px}textarea{min-height:100px;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;transition:.15s;box-shadow:0 2px 5px #00000010}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 12px #00000018}.btn:active{transform:translateY(0)}.primary{background:var(--navy);color:#fff}.gold{background:var(--gold)}.light{background:#edf2f6}.red{background:#b94149;color:#fff}.green{background:#238451;color:#fff}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{padding:8px 11px;border-radius:8px;background:#eef2f6;border:0;font-weight:800;cursor:pointer}.tab.active{background:var(--navy);color:#fff}
+.stats{display:flex;flex-wrap:wrap;gap:8px}.stat{background:#f4f7f9;padding:8px 11px;border-radius:8px;font-size:11px}.stat b{font-size:15px}
+.preview{overflow:auto}.sheet{min-width:800px;background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px}
+.head{text-align:center;border:1px solid var(--line);border-bottom:4px solid var(--gold);padding:9px;border-radius:8px 8px 0 0}.company{font-size:15px;font-weight:900}.office{font-size:10px;font-weight:700;margin-top:3px}.rt{font-size:14px;font-weight:900;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:10px}th{background:#263849;color:#fff;padding:7px 5px;text-align:left}td{border:1px solid #d9e1e8;padding:6px 5px}.festival{background:#fff4c9}.off{background:#eef1f4}.manual{box-shadow:inset 4px 0 #e7ad2b}
+.badge{display:inline-block;padding:4px 7px;border-radius:6px;font-weight:800;font-size:9px}.p0{background:#d9f0fb;color:#24709a}.p1{background:#d8f4e2;color:#267044}.p2{background:#f8d9dd;color:#9b3845}.p3{background:#eee0fb;color:#674199}.note{font-size:10px;color:#637080;line-height:1.4}.history-item{padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center;font-size:9px;margin-top:24px}.footer{font-size:8px;color:#64707c;margin-top:8px}
+@media(max-width:650px){.brand{font-size:15px}.wrap{padding:8px}.card{padding:11px}.btn{flex:1;min-width:125px}.sheet{min-width:720px}}
+@media print{body{background:#fff}.no-print{display:none!important}.wrap{padding:0;max-width:none}.card{box-shadow:none;margin:0;padding:0}.preview{overflow:visible}.sheet{border:0;padding:0;min-width:0}}
+
+.calendar-wrap{overflow:auto;margin-top:12px}
+.calendar{min-width:720px;display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-head{background:var(--navy);color:#fff;padding:7px;text-align:center;font-size:10px;font-weight:900;border-radius:6px}
+.cal-cell{min-height:88px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:6px;cursor:pointer;position:relative}
+.cal-cell:hover{box-shadow:0 2px 8px #0002}
+.cal-cell.empty{background:#f5f7f9;cursor:default}
+.cal-cell.festival{background:#fff8e6}
+.cal-cell.off{background:#f1f4f6}
+.cal-date{font-weight:900;font-size:12px}
+.cal-day{font-size:9px;color:#66717b;margin-top:2px}
+.cal-duty{font-size:11px;font-weight:900;margin-top:8px;word-break:break-word}
+.cal-special{font-size:8px;margin-top:4px;color:#735a00;line-height:1.2}
+.carry-note{background:#edf7f0;border-left:4px solid #238451;padding:8px 10px;border-radius:6px;font-size:10px;margin-top:9px}
+.pattern-editor{display:grid;gap:6px;margin-top:8px}.pattern-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#f7f7f7;border:1px solid #ddd;border-radius:8px;padding:7px}.pattern-row b{min-width:90px}.pattern-row input{width:130px;padding:7px;border:1px solid #bbb;border-radius:6px}.pattern-total{font-size:12px;font-weight:700}.swap-box{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-top:10px;padding:11px;border:1px dashed #b8c8d5;border-radius:12px;background:linear-gradient(135deg,#f7fafc,#eef6fb)}.swap-box label{margin-bottom:4px}.swap-result{font-size:10px;color:#51606e;margin-top:6px}.pattern-ok{color:#238451;font-weight:800}.pattern-warn{color:#b36a00;font-weight:800}body.dark{background:#101821;color:#e8eef3}body.dark .card{background:#17232e;color:#e8eef3;border-color:#263847}body.dark input,body.dark select,body.dark textarea{background:#111b24;color:#e8eef3;border-color:#34495a}body.dark .pattern-row{background:#111b24;border-color:#34495a}body.dark .swap-box{background:#132331;border-color:#39556b}body.dark .stat{background:#111b24}{font-size:11px;color:#666}
+
+/* ===== PRO MOBILE APP UI v6 ===== */
+:root{--navy:#0b3157;--blue:#17638e;--gold:#f0b429;--bg:#f3f6f9;--ink:#122235;--muted:#6d7c8b;--card:#fff;--shadow:0 10px 30px rgba(11,49,87,.10)}
+body{background:var(--bg);color:var(--ink);padding-bottom:78px}
+header{position:sticky;top:0;z-index:30;padding:13px 15px 12px;border-bottom:0;background:linear-gradient(135deg,#071f3b,#0e4e78 65%,#187ca0);box-shadow:0 5px 22px rgba(5,30,55,.22)}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.brandwrap{min-width:0}.brand{font-size:16px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.header-actions{display:flex;gap:7px}.iconbtn{width:36px;height:36px;border:1px solid #ffffff28;background:#ffffff18;color:#fff;border-radius:11px;font-size:17px;cursor:pointer}
+.hero{margin:12px 0;background:linear-gradient(135deg,#0a335b,#1a668d);border-radius:20px;color:#fff;padding:17px;box-shadow:0 12px 30px rgba(9,50,86,.20);position:relative;overflow:hidden}.hero:after{content:'⚡';position:absolute;right:-8px;bottom:-25px;font-size:110px;opacity:.07}.hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:10px;font-weight:800;opacity:.75;text-transform:uppercase;letter-spacing:1px}.hero h1{font-size:23px;line-height:1.1;margin:5px 0}.hero p{font-size:11px;margin:0;opacity:.82}.month-chip{background:#ffffff18;border:1px solid #ffffff2b;border-radius:12px;padding:8px 10px;font-size:10px;font-weight:800}.quick-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px;margin-top:14px}.quick{border:0;border-radius:13px;padding:11px 9px;font-weight:900;font-size:11px;cursor:pointer}.quick.primary{background:#fff;color:#0b3157}.quick.secondary{background:#ffffff18;color:#fff;border:1px solid #ffffff2b}.quick.gold{background:var(--gold);color:#15263a}
+.dashboard-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.mini-stat{background:var(--card);border:1px solid #e4eaf0;border-radius:14px;padding:10px 7px;text-align:center;box-shadow:var(--shadow)}.mini-stat .ico{font-size:16px}.mini-stat b{display:block;font-size:16px;margin-top:3px}.mini-stat span{font-size:8px;color:var(--muted);font-weight:800}
+.card{border-radius:18px;box-shadow:var(--shadow);border:1px solid #e6edf3}.card h2{font-size:15px}.tabs{background:#e8eef4;padding:4px;border-radius:13px;gap:3px;position:sticky;top:63px;z-index:20}.tab{flex:1;padding:9px 7px;font-size:10px;border-radius:10px}.tab.active{box-shadow:0 3px 9px rgba(11,49,87,.15)}
+input,select,textarea{border-radius:11px;border-color:#d6e0e8;outline:none;transition:.15s}input:focus,select:focus,textarea:focus{border-color:#4c89aa;box-shadow:0 0 0 3px rgba(35,117,153,.10)}.btn{border-radius:11px}.actions .btn{min-height:42px}.stats{display:grid;grid-template-columns:repeat(4,1fr)}.stat{border:1px solid #e4ebf0}.preview{padding:12px}
+.bottom-nav{position:fixed;left:10px;right:10px;bottom:10px;height:60px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border:1px solid #dbe5ec;border-radius:19px;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 12px 35px rgba(9,42,70,.20)}.bn{border:0;background:transparent;color:#697887;font-size:9px;font-weight:900}.bn span{display:block;font-size:18px;margin-bottom:2px}.bn.active{color:#0b4e78}
+body.dark{--bg:#0d151d;--card:#17232e;--ink:#e9f0f5;--muted:#91a2b0}body.dark .bottom-nav{background:rgba(23,35,46,.95);border-color:#304452}body.dark .tabs{background:#17232e}body.dark .mini-stat{border-color:#2b3d4b}
+@media(max-width:650px){.wrap{padding:9px}.hero{margin-top:9px}.dashboard-stats{gap:6px}.mini-stat{padding:8px 3px}.stats{grid-template-columns:repeat(2,1fr)}.quick-grid{grid-template-columns:1.35fr 1fr 1fr}.grid{grid-template-columns:1fr}.tabs{top:61px}.brand{font-size:14px}}
+
+</style>
+</head>
+<body>
+<header class="no-print"><div class="appbar"><div class="brandwrap"><div class="brand">⚡ WBSEDCL ROSTER PRO <span class="vtag">v6</span></div><div class="sub">Harirampur 33/11 kV • Buniadpur Division</div></div><div class="header-actions"><button class="iconbtn" onclick="toggleTheme()" aria-label="Theme">◐</button><button class="iconbtn" onclick="showTab('history',document.querySelectorAll('.tab')[2])" aria-label="History">🗂️</button></div></div></header>
+
+<main class="wrap">
+<section class="hero no-print"><div class="hero-top"><div><div class="eyebrow">Professional Duty Management</div><h1>Roster Dashboard</h1><p>Generate, edit, balance and export your monthly duty roster.</p></div><div class="month-chip" id="heroMonth">OCT 2026</div></div><div class="quick-grid"><button class="quick primary" onclick="generate();scrollToOutput()">⚡ GENERATE</button><button class="quick secondary" onclick="printPDF()">📄 PDF</button><button class="quick gold" onclick="saveCurrentRoster()">💾 SAVE</button></div></section><section class="dashboard-stats no-print"><div class="mini-stat"><div class="ico">📅</div><b id="dashDays">—</b><span>DAYS</span></div><div class="mini-stat"><div class="ico">👥</div><b id="dashStaff">—</b><span>STAFF</span></div><div class="mini-stat"><div class="ico">🎉</div><b id="dashSpecial">—</b><span>SPECIAL</span></div><div class="mini-stat"><div class="ico">✏️</div><b id="dashManual">—</b><span>EDITED</span></div></section>
+<section class="card no-print">
+<div class="tabs">
+<button class="tab active" onclick="showTab('setup',this)">⚙️ Setup</button>
+<button class="tab" onclick="showTab('rules',this)">🔄 Duty Rules</button>
+<button class="tab" onclick="showTab('history',this)">🗂️ Previous Rosters</button>
+</div>
+<div id="setup" style="margin-top:13px">
+<div class="grid">
+<div><label>Station / Office</label><input id="station" value="Harirampur 33/11 kV Sub-Station"></div>
+<div><label>Division</label><input id="division" value="Buniadpur Division"></div>
+<div><label>Month</label><input id="month" type="month" value="2026-10" onchange="changeMonth()"></div>
+<div><label>Roster Title</label><input id="title" value="MONTHLY DUTY ROSTER"></div>
+</div>
+<div style="margin-top:10px"><label>Staff — one name per line</label><textarea id="staff">Debnath
+Asim
+Sukumar</textarea></div>
+<div style="margin-top:10px"><label>Duty Pattern — one line per staff: Name|block+block+block</label><textarea id="patterns">Debnath|3+3+4
+Asim|2+2+2+2+2
+Sukumar|4+3+4</textarea>
+<div class="pattern-editor" id="patternEditor"></div>
+<div style="margin-top:7px"><button class="btn light" onclick="applyPatternEditor()">✏️ APPLY PATTERN CHANGES</button> <button class="btn light" onclick="autoBalancePatterns()">⚖️ AUTO-BALANCE 31 DAYS</button></div>
+<div id="patternSummary" class="note" style="margin-top:6px"></div>
+<div class="swap-box">
+  <div><label>Swap Date 1</label><input id="swapD1" type="number" min="1" max="31" value="1"></div>
+  <div><label>Swap Date 2</label><input id="swapD2" type="number" min="1" max="31" value="2"></div>
+  <button class="btn gold" onclick="swapDuties()">🔄 STAFF SWAP</button>
+</div>
+<div class="swap-result" id="swapResult">Tip: Swap any two duty dates without changing the saved pattern settings.</div></div>
+<div style="margin-top:10px"><label>Holiday / Special dates — date|label|festival/holiday/off</label>
+<div style="margin-bottom:7px"><button class="btn green" onclick="loadOfficialHolidays()">🌐 LOAD WB HOLIDAYS</button> <span class="note">Month changes automatically load the saved official 2026 West Bengal holiday data.</span></div><textarea id="special">02|Gandhi Jayanti|holiday
+04|Weekly Off|off
+10|Mahalaya / Amavasya|festival
+11|Sharadiya Navratri / Sun Off|off
+15|Durga Puja — Maha Panchami|festival
+16|Durga Puja — Durga Sasthi|festival
+17|Durga Puja — Maha Saptami|festival
+18|Maha Saptami (Adhik / Sun)|festival
+19|Durga Puja — Maha Ashtami|festival
+20|Durga Puja — Maha Navami|festival
+21|Durga Puja — Vijaya Dashami|festival
+22|Ekadashi / Addl. Durga Holiday|holiday
+23|Addl. Durga Puja Holiday|holiday
+24|Addl. Durga Puja Holiday|holiday
+25|Kojagari Lakshmi Puja (Sun)|festival
+26|Purnima / Addl. Lakshmi Holiday|holiday</textarea></div>
+</div>
+
+<div id="rules" style="display:none;margin-top:13px">
+<div class="grid">
+<div><label>Rotation</label><select id="rotation"><option value="balanced">Balanced rotation</option><option value="simple">Simple rotation</option></select></div>
+<div><label>Weekly Off</label><select id="weekly"><option value="none">None</option><option value="sun">Sunday</option><option value="fri">Friday</option></select></div>
+<div><label>Duty continuity</label><select id="continuity"><option value="avoid">Avoid same person 2 consecutive days</option><option value="allow">Allow consecutive duty</option></select></div>
+<div><label>Manual assignment priority</label><select id="manualPriority"><option value="yes">Keep manual changes on regeneration</option><option value="no">Regenerate all</option></select></div>
+<div><label>Previous month carry-over</label><select id="carryover"><option value="yes">Auto-adjust from previous roster</option><option value="no">Start fresh each month</option></select></div>
+</div>
+<p class="note">After generating, use the Edit button on any row to manually change that day's duty. Regeneration keeps manual changes when the option above is enabled.</p>
+</div>
+
+<div id="history" style="display:none;margin-top:13px"><div id="historyList"></div></div>
+
+<div class="actions">
+<button class="btn primary" onclick="generate()">⚡ GENERATE ROSTER</button>
+<button class="btn gold" onclick="printPDF()">📄 GENERATE PDF</button>
+<button class="btn green" onclick="downloadCSV()">📊 EXPORT CSV</button>
+<button class="btn green" onclick="downloadPNG()">🖼️ EXPORT PNG</button>
+<button class="btn light" onclick="saveSettings()">💾 SAVE SETTINGS</button>
+<button class="btn light" onclick="loadSettings()">↩️ LOAD SETTINGS</button>
+<button class="btn light" onclick="saveCurrentRoster()">🗂️ SAVE ROSTER</button>
+<button class="btn light" onclick="showBalance()">📊 BALANCE</button>
+<button class="btn light" onclick="toggleTheme()">🌙 DARK MODE</button>
+<button class="btn red" onclick="resetApp()">RESET</button>
+</div>
+<p class="note">For official circulation, verify holiday dates, weekly-off arrangements and duty allocation against the applicable WBSEDCL order/calendar.</p>
+</section>
+
+<section class="card no-print"><div class="stats"><div class="stat">📅 Days <b id="days">—</b></div><div class="stat">👥 Staff <b id="staffN">—</b></div><div class="stat">🎉 Special <b id="specialN">—</b></div><div class="stat">✏️ Manual <b id="manualN">0</b></div><div class="stat" id="status">Ready</div></div></section>
+
+<section class="card no-print" id="balanceCard" style="display:none"><h2>📊 Duty Balance & Pattern Blocks</h2><div id="balanceView"></div></section>
+<section class="card preview"><div id="output"></div>
+<div id="calendarCard" style="margin-top:14px">
+<h2>📅 Monthly Calendar</h2>
+<div id="carryInfo" class="carry-note">Generate a roster to update the calendar.</div>
+<div class="calendar-wrap"><div id="calendar" class="calendar"></div></div>
+</div></section>
+</main>
+
+<nav class="bottom-nav no-print"><button class="bn active" onclick="appNav('home')"><span>⌂</span>Home</button><button class="bn" onclick="appNav('setup')"><span>⚙️</span>Setup</button><button class="bn" onclick="appNav('rules')"><span>🔄</span>Rules</button><button class="bn" onclick="appNav('history')"><span>🗂️</span>History</button></nav>
+<script>
+let rowsData=[], manual={};
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+const WB_HOLIDAYS_2026={
+1:[['01','New Year’s Day','holiday'],['12','Birthday of Swami Vivekananda','holiday'],['22','Day before Saraswati Puja','holiday'],['23','Netaji’s Birthday and Sree Panchami','holiday'],['26','Republic Day','holiday']],
+2:[['04','Shab-e-Barat','holiday'],['14','Birthday of Thakur Panchanan Barma','holiday']],
+3:[['03','Doljatra','holiday'],['04','Holi (Day after Doljatra)','holiday'],['17','Birth Day of Shri Shri Harichand Thakur','holiday'],['20','Day before Eid-Ul-Fitr','holiday'],['21','Eid-Ul-Fitr','holiday'],['26','Ram Navami','holiday'],['31','Mahavir Jayanti','holiday']],
+4:[['03','Good Friday','holiday'],['14','Birthday of Dr. B. R. Ambedkar','holiday'],['15','Bengali New Year’s Day (Nababarsha)','holiday']],
+5:[['01','May Day and Buddha Purnima','holiday'],['26','Day before Eid-Ud-Zoha (Bakrid)','holiday'],['27','Id-Ud-Zoha (Bakrid)','holiday'],['28','Id-Ud-Zoha (Bakrid) — revised date','holiday']],
+6:[['26','Muharram','holiday'],['30','Hul Diwas','holiday']],
+7:[['01','Birthday of Dr. Bidhan Chandra Roy (Halfday Holiday)','holiday'],['06','Birthday of Dr. Shyama Prasad Mukherjee','holiday'],['13','Birthday of Poet Bhanu Bhakt (Darjeeling & Kalimpong only)','holiday'],['16','Rathayatra','holiday']],
+8:[['15','Independence Day','holiday'],['26','Fateha-Dwaz-Daham','holiday'],['28','Rakhi Bandhan','holiday']],
+9:[['04','Janmastami','holiday'],['17','Viswakarma Puja','holiday']],
+10:[['02','Birthday of Gandhiji','holiday'],['10','Mahalaya','festival'],['15','Durga Puja — Maha Chaturthi','festival'],['16','Durga Puja — Maha Panchami','festival'],['17','Durga Puja — Maha Shashthi','festival'],['18','Durga Puja — Maha Saptami','festival'],['19','Durga Puja — Maha Ashtami','festival'],['20','Durga Puja — Maha Nabami','festival'],['21','Durga Puja — Vijaya Dashami','festival'],['22','Additional Day for Durga Puja','holiday'],['23','Additional Day for Durga Puja','holiday'],['24','Additional Day for Durga Puja','holiday'],['25','Lakshmi Puja','festival'],['26','Additional Day for Lakshmi Puja','holiday']],
+11:[['08','Kali Puja','festival'],['09','Additional Day for Kali Puja','holiday'],['10','Additional Day for Kali Puja','holiday'],['11','Bhratridwitiya','holiday'],['12','Day after Bhratridwitiya','holiday'],['15','Chhat Puja','holiday'],['16','Additional Day for Chhat Puja','holiday'],['24','Birthday of Guru Nanak / Parshwanath’s Rathajatra','holiday'],['24','Birthday of Guru Nanak / Parshwanath’s Rathajatra','holiday']],
+12:[['25','Christmas Day','holiday']]
+};
+function defaultSpecial(ym){
+ const [y,m]=ym.split('-').map(Number); if(y!==2026)return '';
+ return (WB_HOLIDAYS_2026[m]||[]).map(a=>a.join('|')).join('\n');
+}
+function loadOfficialHolidays(){
+ const ym=$('month').value; if(!ym)return;
+ const before=$('special').value;
+ loadMonthSpecial(ym);
+ if(!$('special').value) $('special').value=defaultSpecial(ym);
+ saveMonthSpecial(ym); generate();
+ $('status').textContent='✓ WB holiday data loaded';
+}
+function parseSpecial(text){let x={};(text??$('special').value).split(/\n/).map(s=>s.trim()).filter(Boolean).forEach(s=>{let p=s.split('|');if(p.length>=2&&/^\d+$/.test(p[0]))x[+p[0]]={label:p[1],type:p[2]||'holiday'};});return x;}
+function saveMonthSpecial(ym){try{let all=JSON.parse(localStorage.wbsProSpecials||'{}');all[ym]=$('special').value;localStorage.wbsProSpecials=JSON.stringify(all);}catch(e){}}
+function loadMonthSpecial(ym){try{let all=JSON.parse(localStorage.wbsProSpecials||'{}');$('special').value=Object.prototype.hasOwnProperty.call(all,ym)?all[ym]:defaultSpecial(ym);}catch(e){$('special').value=defaultSpecial(ym);}}
+function changeMonth(){
+ const ym=$('month').value; if(!ym)return;
+ if(changeMonth.previous)saveMonthSpecial(changeMonth.previous);
+ const saved=(()=>{try{return JSON.parse(localStorage.wbsProMonthly||'{}')[ym]}catch(e){return null}})();
+ if(saved&&saved.special!==undefined) $('special').value=saved.special;
+ else loadMonthSpecial(ym);
+ manual=(saved&&saved.manual)?{...saved.manual}:{};
+ changeMonth.previous=ym;
+ renderPatternEditor(); renderPatternSummary(); generate();
+}
+function staffList(){return $('staff').value.split(/\n/).map(s=>s.trim()).filter(Boolean);}
+function parsePatterns(){
+ const out={};
+ $('patterns').value.split(/\n/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
+   const p=line.split('|'); if(p.length<2)return;
+   const name=p[0].trim(); const nums=p[1].split('+').map(n=>parseInt(n.trim(),10)).filter(n=>Number.isFinite(n)&&n>0);
+   if(name&&nums.length)out[name]=nums;
+ });
+ return out;
+}
+function renderPatternEditor(){
+ const staff=staffList(), pats=parsePatterns();
+ $('patternEditor').innerHTML=staff.map((n,i)=>{const a=pats[n]||[1]; return `<div class="pattern-row"><b>${esc(n)}</b><input id="pat_${i}" value="${esc(a.join('+'))}" placeholder="3+3+4"><span class="pattern-total" id="pt_${i}">Total ${a.reduce((x,y)=>x+y,0)}</span></div>`;}).join('');
+ staff.forEach((n,i)=>{const el=$('pat_'+i); if(el)el.oninput=()=>{const nums=el.value.split('+').map(x=>parseInt(x.trim(),10)).filter(x=>Number.isFinite(x)&&x>0);$('pt_'+i).textContent='Total '+nums.reduce((a,b)=>a+b,0);};});
+}
+function applyPatternEditor(){
+ const staff=staffList(), lines=[];
+ staff.forEach((n,i)=>{const v=$('pat_'+i)?.value.trim()||'1';lines.push(n+'|'+v);});
+ $('patterns').value=lines.join('\n'); renderPatternEditor(); renderPatternSummary(); generate();
+}
+function autoBalancePatterns(){
+ const staff=staffList(); if(staff.length!==3){alert('Auto-balance is designed for 3 staff.');return;}
+ const ym=$('month').value,[y,m]=ym.split('-').map(Number),days=new Date(y,m,0).getDate();
+ const totals=[10,10,days-20];
+ const defs=[`${totals[0]===10?'3+3+4':totals[0]}`,`${totals[1]===10?'2+2+2+2+2':totals[1]}`,totals[2]===11?'4+3+4':(totals[2]===10?'3+3+4':`4+${Math.floor(totals[2]/2)}+${Math.ceil(totals[2]/2)-4}`)];
+ $('patterns').value=staff.map((n,i)=>n+'|'+defs[i]).join('\n'); renderPatternEditor(); renderPatternSummary(); generate();
+}
+function renderPatternSummary(){
+ const staff=staffList(), pats=parsePatterns(); const [yy,mm]=($('month').value||'2026-01').split('-').map(Number); const monthDays=new Date(yy,mm,0).getDate();
+ const totals=staff.map(n=>(pats[n]||[1]).reduce((x,y)=>x+y,0)); const sum=totals.reduce((a,b)=>a+b,0); const clsx=sum===monthDays?'pattern-ok':'pattern-warn';
+ $('patternSummary').innerHTML=staff.map((n,i)=>{const a=pats[n]||[1];return `<b>${esc(n)}</b>: ${a.join('+')} <span class="badge p${i%4}">Total ${a.reduce((x,y)=>x+y,0)}</span>`}).join(' &nbsp; | &nbsp; ') + ` &nbsp; <span class="${clsx}">Month total: ${sum}/${monthDays}</span>` + (sum!==monthDays?` <span class="note">(Generate will auto-adjust the final block to complete the month.)</span>`:'');
+}
+function patternSchedule(staff,days,previous){
+ const ep=effectivePatterns(staff,days);
+ const state=staff.map((n,i)=>({name:n,blocks:(ep[i]||[1]).slice(),bi:0,remaining:0,done:0,total:(ep[i]||[1]).reduce((a,b)=>a+b,0)}));
+ let out=[], last=previous||''; let start=Math.max(0,staff.indexOf(previous)+1); if(start>=staff.length)start=0; let guard=0;
+ while(out.length<days && guard++<days*staff.length*10){
+   let picked=-1;
+   for(let step=0;step<staff.length;step++){const i=(start+step)%staff.length,st=state[i];if(st.done>=st.total)continue;if(st.name===last&&staff.length>1)continue;picked=i;break;}
+   if(picked<0){for(let step=0;step<staff.length;step++){const i=(start+step)%staff.length,st=state[i];if(st.done<st.total){picked=i;break;}}}
+   if(picked<0)break; const st=state[picked]; if(st.remaining<=0)st.remaining=st.blocks[st.bi]||0;
+   const take=Math.min(st.remaining,days-out.length); for(let j=0;j<take;j++)out.push(st.name);
+   st.remaining-=take;st.done+=take;if(st.remaining<=0)st.bi++;last=st.name;start=(picked+1)%staff.length;
+ }
+ return out.slice(0,days);
+}
+function cls(name,staff){return 'p'+(Math.max(0,staff.indexOf(name))%4);}
+function monthKey(ym){ const [y,m]=ym.split('-').map(Number); const d=new Date(y,m-1,1); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7); }
+function getPreviousRoster(ym){
+ if($('carryover')?.value!=='yes') return null;
+ const prev=monthKey(ym);
+ try{
+   const saved=JSON.parse(localStorage.wbsProMonthly||'{}');
+   if(saved[prev]&&Array.isArray(saved[prev].rows)) return saved[prev];
+   const history=JSON.parse(localStorage.wbsProHistory||'[]');
+   const station=$('station').value;
+   const found=history.find(x=>x.month===prev&&x.station===station&&Array.isArray(x.rows)&&x.rows.length);
+   if(found)return found;
+ }catch(e){}
+ return null;
+}
+function persistMonthlyRoster(){try{const ym=$('month').value;const saved=JSON.parse(localStorage.wbsProMonthly||'{}');saved[ym]={month:ym,station:$('station').value,division:$('division').value,title:$('title').value,staff:staffList(),patterns:$('patterns').value,special:$('special').value,rows:rowsData.map(r=>({...r})),manual:{...manual},savedAt:new Date().toISOString()};localStorage.wbsProMonthly=JSON.stringify(saved);saveMonthSpecial(ym);}catch(e){}}
+function generate(){
+ const staff=staffList(),ym=$('month').value;
+ if(!staff.length||!ym){alert('Enter staff and month.');return;}
+ renderPatternSummary();
+ const [y,m]=ym.split('-').map(Number),days=new Date(y,m,0).getDate(),sp=parseSpecial();
+ const prev=getPreviousRoster(ym); let previous='',carryText='No previous-month roster found — starting with the configured duty pattern.';
+ if(prev&&prev.rows?.length){previous=prev.rows[prev.rows.length-1]?.duty||'';carryText=`Previous month (${prev.month}) found. Pattern starts after <b>${esc(previous)}</b>, continuing the duty sequence.`;}
+ const schedule=patternSchedule(staff,days,previous); rowsData=[];
+ for(let d=1;d<=days;d++){
+   const dt=new Date(y,m-1,d),weekday=dt.toLocaleDateString('en-IN',{weekday:'long'}); let special=sp[d];
+   if(!special&&$('weekly').value==='sun'&&dt.getDay()===0)special={label:'Weekly Off — Sunday',type:'off'};
+   if(!special&&$('weekly').value==='fri'&&dt.getDay()===5)special={label:'Weekly Off — Friday',type:'off'};
+   let duty=(manual[d]&&$('manualPriority').value==='yes')?manual[d]:schedule[d-1];
+   rowsData.push({d,weekday,label:special?.label||'—',type:special?.type||'',duty});
+ }
+ render();renderCalendar(carryText);updateStats();persistMonthlyRoster();
+}
+
+function render(){
+ const staff=staffList(),ym=$('month').value,[y,m]=ym.split('-').map(Number);
+ let body=rowsData.map(r=>`<tr class="${r.type==='off'?'off':r.type?'festival':''}${manual[r.d]?' manual':''}">
+ <td><b>${String(r.d).padStart(2,'0')}</b><br>${new Date(y,m-1,r.d).toLocaleDateString('en-IN',{month:'short'})}</td>
+ <td>${r.weekday}</td><td>${esc(r.label)}</td>
+ <td><span class="badge ${cls(r.duty,staff)}">${esc(r.duty)}</span>
+ <button class="no-print" style="margin-left:5px;border:0;border-radius:5px;padding:3px 6px;font-size:9px" onclick="editDuty(${r.d})">✏️ Edit</button> <button class="no-print" style="border:0;border-radius:5px;padding:3px 6px;font-size:9px" onclick="quickSwap(${r.d})">🔄 Swap</button></td></tr>`).join('');
+ $('output').innerHTML=`<div class="sheet" id="sheet"><div class="head">
+ <div class="company">WEST BENGAL STATE ELECTRICITY DISTRIBUTION COMPANY LIMITED</div>
+ <div class="office">${esc($('station').value)} • ${esc($('division').value)}</div>
+ <div class="rt">🌺 ${esc($('title').value)} — ${new Date(y,m-1,1).toLocaleDateString('en-IN',{month:'long',year:'numeric'})} 🌺</div>
+ </div><table><thead><tr><th>DATE</th><th>DAY</th><th>HOLIDAY / SPECIAL OCCASION</th><th>DUTY IN-CHARGE</th></tr></thead><tbody>${body}</tbody></table>
+ <div style="margin-top:8px;font-size:9px"><b>Color Index:</b> 🌺 Festival/Holiday &nbsp; ⚪ Weekly Off &nbsp; ✏️ Manual Edit &nbsp; <b>Staff:</b> ${staff.map(s=>`<span class="badge ${cls(s,staff)}">${esc(s)}</span>`).join(' ')}</div>
+ <div class="footer">Note: Special dates are user-entered and must be verified with the applicable official calendar/order before issue. Generated by WBSEDCL Roster Generator Pro v5.</div>
+ <div class="sign"><div>____________________<br>Prepared By</div><div>____________________<br>Checked & Approved By</div><div>____________________<br>Officer-In-Charge</div></div>
+ </div>`;
+}
+function renderCalendar(carryText){
+ const ym=$('month').value,[y,m]=ym.split('-').map(Number);
+ const first=new Date(y,m-1,1).getDay();
+ const days=new Date(y,m,0).getDate();
+ const heads=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+ let cells=heads.map(h=>`<div class="cal-head">${h}</div>`).join('');
+ for(let i=0;i<first;i++)cells+='<div class="cal-cell empty"></div>';
+ for(let d=1;d<=days;d++){
+   const r=rowsData.find(x=>x.d===d); if(!r)continue;
+   const type=r.type==='off'?'off':r.type?'festival':'';
+   cells+=`<div class="cal-cell ${type}" onclick="editDuty(${d})" title="Click to edit duty">
+     <div class="cal-date">${d}</div>
+     <div class="cal-day">${esc(r.weekday)}</div>
+     <div class="cal-duty">👤 ${esc(r.duty)}</div>
+     ${r.label!=='—'?`<div class="cal-special">🌺 ${esc(r.label)}</div>`:''}
+   </div>`;
+ }
+ $('calendar').innerHTML=cells;
+ $('carryInfo').innerHTML='🔄 '+carryText+' <span style="float:right">Click any calendar date to edit duty.</span>';
+}
+
+function editDuty(d){
+ const staff=staffList(), current=rowsData.find(r=>r.d===d)?.duty||'';
+ const val=prompt('Enter duty in-charge for '+d+' '+new Date($('month').value+'-01').toLocaleDateString('en-IN',{month:'long',year:'numeric'}),current);
+ if(val===null)return;
+ if(!staff.includes(val.trim())){if(!confirm('Name not in staff list. Use it anyway?'))return;}
+ manual[d]=val.trim();generate();persistMonthlyRoster();
+}
+function effectivePatterns(staff,days){
+ const pats=parsePatterns();
+ const out=staff.map(n=>(pats[n]||[1]).slice());
+ let total=out.reduce((sum,a)=>sum+a.reduce((x,y)=>x+y,0),0);
+ if(!staff.length)return out;
+ const delta=days-total;
+ let i=out.length-1;
+ if(delta>0){out[i][out[i].length-1]=(out[i][out[i].length-1]||0)+delta;}
+ else if(delta<0){
+   let need=-delta;
+   for(let k=out.length-1;k>=0&&need>0;k--){
+     for(let j=out[k].length-1;j>=0&&need>0;j--){
+       const cut=Math.min(need,Math.max(0,out[k][j]-1));
+       out[k][j]-=cut; need-=cut;
+       if(out[k][j]===0)out[k].splice(j,1);
+     }
+   }
+ }
+ return out;
+}
+function swapDuties(){
+ const d1=parseInt($('swapD1').value,10),d2=parseInt($('swapD2').value,10);
+ if(!rowsData.length){generate();}
+ if(!d1||!d2||d1===d2){$('swapResult').textContent='Choose two different dates.';return;}
+ const a=rowsData.find(r=>r.d===d1),b=rowsData.find(r=>r.d===d2);
+ if(!a||!b){$('swapResult').textContent='One of the selected dates is outside this month.';return;}
+ const temp=a.duty;a.duty=b.duty;b.duty=temp;manual[d1]=a.duty;manual[d2]=b.duty;
+ $('swapResult').innerHTML=`✓ Swapped <b>${d1}</b> ↔ <b>${d2}</b>: ${esc(a.duty)} / ${esc(b.duty)}`;
+ render();renderCalendar('Staff swap applied.');updateStats();persistMonthlyRoster();
+}
+function quickSwap(d){$('swapD1').value=d;const max=rowsData.length||31;$('swapD2').value=d<max?d+1:1;swapDuties();}
+function showBalance(){
+ const box=$('balanceCard');box.style.display=box.style.display==='none'?'block':'none';if(box.style.display==='none')return;
+ const staff=staffList(), days=rowsData.length, counts={};staff.forEach(n=>counts[n]=0);rowsData.forEach(r=>{if(counts[r.duty]!==undefined)counts[r.duty]++;});
+ const pats=effectivePatterns(staff,days);let html='<div class="grid">';staff.forEach((n,i)=>{const total=counts[n]||0;const target=pats[i].reduce((a,b)=>a+b,0);html+=`<div class="stat"><b>${esc(n)}</b><br>Actual <strong>${total}</strong> / Target <strong>${target}</strong><br><span class="badge p${i%4}">${pats[i].join('+')}</span></div>`;});html+='</div><p class="note">Block pattern is applied once per month. Manual edits and swaps are included in Actual counts.</p>';$('balanceView').innerHTML=html;
+}
+function toggleTheme(){document.body.classList.toggle('dark');const dark=document.body.classList.contains('dark');localStorage.wbsProDark=dark?'1':'0';$('status').textContent=dark?'🌙 Dark mode':'☀️ Light mode';}
+function scrollToOutput(){setTimeout(()=>document.getElementById('output')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+function appNav(id){document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));const map={home:0,setup:1,rules:2,history:3};if(map[id]!=null)document.querySelectorAll('.bn')[map[id]].classList.add('active');if(id==='home'){window.scrollTo({top:0,behavior:'smooth'});return;}const btn=document.querySelectorAll('.tab')[id==='setup'?0:id==='rules'?1:2];showTab(id,btn);document.querySelector('.card').scrollIntoView({behavior:'smooth',block:'start'});}
+function updateHeroMonth(){const v=$('month').value;if(v){const d=new Date(v+'-01T00:00:00');$('heroMonth').textContent=d.toLocaleDateString('en-IN',{month:'short',year:'numeric'}).toUpperCase();}}
+function updateStats(){ const special=rowsData.filter(r=>r.type).length, edited=Object.keys(manual).length, staff=staffList().length; $('days').textContent=rowsData.length;$('staffN').textContent=staff;$('specialN').textContent=special;$('manualN').textContent=edited;$('dashDays').textContent=rowsData.length;$('dashStaff').textContent=staff;$('dashSpecial').textContent=special;$('dashManual').textContent=edited;$('status').textContent='✓ Generated';updateHeroMonth();}
+function printPDF(){generate();setTimeout(()=>window.print(),100);}
+function csvEscape(v){return '"'+String(v).replace(/"/g,'""')+'"';}
+function downloadCSV(){
+ if(!rowsData.length)generate();
+ let csv='Date,Day,Holiday / Special Occasion,Duty In-Charge\n'+rowsData.map(r=>[r.d,r.weekday,r.label,r.duty].map(csvEscape).join(',')).join('\n');
+ download(new Blob([csv],{type:'text/csv'}),'WBSEDCL_Roster.csv');
+}
+function downloadPNG(){
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="${Math.max(900,rowsData.length*38+300)}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial;padding:25px;background:white">${$('output').innerHTML.replaceAll('class="no-print"','style="display:none"')}</div></foreignObject></svg>`;
+ download(new Blob([svg],{type:'image/svg+xml'}),'WBSEDCL_Roster.svg');
+ alert('Image export saved as SVG (opens in Chrome and can be converted to PNG).');
+}
+function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function saveSettings(){let o={station:$('station').value,division:$('division').value,month:$('month').value,title:$('title').value,staff:$('staff').value,special:$('special').value,rotation:$('rotation').value,weekly:$('weekly').value,continuity:$('continuity').value,manualPriority:$('manualPriority').value,carryover:$('carryover').value,patterns:$('patterns').value};localStorage.wbsProSettings=JSON.stringify(o);$('status').textContent='✓ Settings saved';}
+function loadSettings(){try{let o=JSON.parse(localStorage.wbsProSettings);Object.keys(o).forEach(k=>{if($(k))$(k).value=o[k]});generate();$('status').textContent='✓ Settings loaded';}catch(e){alert('No saved settings.');}}
+function saveCurrentRoster(){
+ if(!rowsData.length)generate();
+ let key=new Date().toISOString(), history=JSON.parse(localStorage.wbsProHistory||'[]');
+ history.unshift({key,month:$('month').value,station:$('station').value,division:$('division').value,title:$('title').value,rows:rowsData,manual});
+ history=history.slice(0,20);localStorage.wbsProHistory=JSON.stringify(history);renderHistory();$('status').textContent='✓ Roster saved';
+}
+function renderHistory(){
+ let h=JSON.parse(localStorage.wbsProHistory||'[]');
+ $('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="history-item"><div><b>${esc(x.title)}</b><br><small>${esc(x.month)} • ${esc(x.station)}</small></div><div><button class="btn light" onclick="restoreHistory(${i})">Open</button> <button class="btn red" onclick="deleteHistory(${i})">Delete</button></div></div>`).join(''):'<p class="note">No saved rosters yet.</p>';
+}
+function restoreHistory(i){let h=JSON.parse(localStorage.wbsProHistory||'[]'),x=h[i];if(!x)return;$('month').value=x.month;$('station').value=x.station;$('division').value=x.division;$('title').value=x.title;if(x.patterns)$('patterns').value=x.patterns;if(x.special!==undefined)$('special').value=x.special;else loadMonthSpecial(x.month);rowsData=x.rows;manual=x.manual||{};render();renderCalendar('Previous saved roster opened. You can now change the month and Generate to continue from its final duty.');persistMonthlyRoster();updateStats();$('status').textContent='✓ Previous roster opened';}
+function deleteHistory(i){let h=JSON.parse(localStorage.wbsProHistory||'[]');h.splice(i,1);localStorage.wbsProHistory=JSON.stringify(h);renderHistory();}
+function showTab(id,btn){['setup','rules','history'].forEach(x=>$(x).style.display=x===id?'block':'none');document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(id==='history')renderHistory();}
+function resetApp(){if(confirm('Reset settings and current manual edits?')){manual={};localStorage.removeItem('wbsProSettings');localStorage.removeItem('wbsProMonthly');location.reload();}}
+if(localStorage.wbsProDark==='1')document.body.classList.add('dark'); changeMonth.previous=$('month').value; updateHeroMonth(); loadMonthSpecial($('month').value); renderPatternEditor(); renderPatternSummary(); renderHistory(); generate();
+</script>
+</body>
+</html>
